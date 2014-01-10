@@ -1,0 +1,4 @@
+##Customize the test machine
+machine:
+  node:
+      version: 0.10.11
