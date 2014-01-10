@@ -1,0 +1,37 @@
+{
+  "name": "semantria-client",
+  "version": "0.0.0",
+  "description": "A nodejs client for Semantria API tools",
+  "main": "SemantriaClient.js",
+  "scripts": {
+    "test": "nodeunit testing/tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/brenzenb/semantria-client.git"
+  },
+  "keywords": [
+    "nodejs",
+    "semantria"
+  ],
+  "author": [
+    "Brian Renzenbrink", 
+    "Wade Forman"
+  ],
+  "maintainers": [
+    {
+      "name": "Brian Renzenbrink",
+      "email": "brian@localresponse.com"
+    }
+  ],
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "gitHead": "0394951dd35e0832bd8c3b1bbe07616188338f07",
+  "dependencies": {
+    "q": "git://github.com/LocalResponse/q.git"
+  },
+  "devDependencies": {
+    "capsela-util": "git://github.com/LocalResponse/capsela-util.git",
+    "nock": ""
+  }
+}
