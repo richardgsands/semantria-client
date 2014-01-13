@@ -110,6 +110,20 @@ __.prototype.retrieveDocument = function(id) {
 };
 
 /**
+ * Retrieves all currently active categories for this semantria account.
+ * https://semantria.com/developer/analysis-settings/categories
+ * @param id
+ * @returns {promise}
+ */
+__.prototype.retrieveCategories = function(id) {
+    var url = 'https://api30.semantria.com/categories.json';
+    var postData = {
+      config_id : id || ''
+    };
+    return this.execute('GET', url, postData);
+};
+
+/**
  * Generic method to hit the semantria end point
  * @param method - 'GET' or 'POST'
  * @param endpoint

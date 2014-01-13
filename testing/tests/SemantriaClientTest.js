@@ -14,7 +14,7 @@ var EventEmitter = require('events').EventEmitter;
 
 exports['create'] = {
     'success' : function(test) {
-        var client = SemantriaClient.create();
+        var client = SemantriaClient.create('','');
 
         test.ok(client);
 
@@ -25,7 +25,7 @@ exports['create'] = {
 exports['queueDocument'] = {
     'success' : function(test) {
 
-        var c = SemantriaClient.create();
+        var c = SemantriaClient.create('','');
 
         c.execute = function(method, endpoint, postData) {
             test.equal(method, 'POST');
@@ -50,7 +50,7 @@ exports['queueDocument'] = {
 
 exports['retrieveConfigurations'] = {
   'success' : function (test) {
-    var c = SemantriaClient.create();
+    var c = SemantriaClient.create('','');
     c.execute = function(method, endpoint, postData) {
       test.equal(method, 'GET');
       test.equal(endpoint, 'https://api30.semantria.com/configurations.json');
@@ -77,18 +77,10 @@ exports['updateConfiguration'] = {
     MonkeyPatcher.tearDown(cb);
   },
   'success' : function (test) {
-    var c = SemantriaClient.create();
+    var c = SemantriaClient.create('','');
     var configJSON = {
       "test": "abc"
     };
-
-//    MonkeyPatcher.patch(JSON, 'parse', function(data) {
-//      return data;
-//    });
-//    MonkeyPatcher.patch(fs, 'readFileSync', function(location) {
-//      test.equal(location.slice(location.length - fileLoc.length), fileLoc);
-//      return 'mockFileData';
-//    });
 
     c.execute = function(method, endpoint, postData) {
       test.equal(method, 'POST');
@@ -108,7 +100,7 @@ exports['updateConfiguration'] = {
 
 exports['deleteConfiguration'] = {
   'success' : function (test) {
-    var c = SemantriaClient.create();
+    var c = SemantriaClient.create('','');
     var mockIds = ['abc'];
     c.execute = function(method, endpoint, postData) {
       test.equal(method, 'DELETE');
@@ -129,7 +121,7 @@ exports['deleteConfiguration'] = {
 exports['queueDocumentBatch'] = {
     'success' : function(test) {
 
-        var c = SemantriaClient.create();
+        var c = SemantriaClient.create('','');
 
         c.execute = function(method, endpoint, postData) {
             test.equal(method, 'POST');
@@ -152,9 +144,9 @@ exports['queueDocumentBatch'] = {
     },
 
     'will reject on batch larger than 10' : function(test) {
-        var c = SemantriaClient.create();
+        var c = SemantriaClient.create('','');
 
-        c.execute = function(method, endpoint, postData) {
+        c.execute = function() {
           test.fail();
         };
 
@@ -169,12 +161,12 @@ exports['queueDocumentBatch'] = {
             }
         );
     }
-}
+};
 
 exports['retrieveDocument'] = {
 
     'success' : function(test) {
-        var c = SemantriaClient.create();
+        var c = SemantriaClient.create('','');
 
         c.execute = function(method, endpoint) {
 
@@ -193,7 +185,32 @@ exports['retrieveDocument'] = {
             }
         );
     }
-}
+};
+
+exports['retrieveDocument'] = {
+
+  'success' : function(test) {
+    var c = SemantriaClient.create('','');
+
+    c.execute = function(method, endpoint, postData) {
+
+      test.equal(method, 'GET');
+      test.equal(endpoint, 'https://api30.semantria.com/categories.json');
+      test.equal(postData.config_id, 'id');
+
+      return Q.resolve('stuff');
+    };
+
+    test.expect(4);
+
+    c.retrieveCategories('id').then(
+      function(result) {
+        test.equal(result, 'stuff');
+        test.done();
+      }
+    );
+  }
+};
 
 exports['execute'] = {
 
@@ -206,13 +223,13 @@ exports['execute'] = {
     },
 
     'success with POST' : function(test) {
-        var c = SemantriaClient.create();
+        var c = SemantriaClient.create('','');
 
         var address = 'https://api30.semantria.com';
         var endPoint = '/test.json';
 
         c.sign = function(method, endpoint){
-            test.ok(true)
+            test.ok(true);
             return {query: endpoint, headers : {}}
         };
 
@@ -224,10 +241,10 @@ exports['execute'] = {
         c.on('processed', function(body){
             test.equal(body, 'hi');
             test.done();
-        })
-        var n = nock(address)
-            .post(endPoint, postData)
-            .reply(200, 'hi');
+        });
+        nock(address)
+          .post(endPoint, postData)
+          .reply(200, 'hi');
 
         test.expect(2);
 
@@ -235,19 +252,19 @@ exports['execute'] = {
     },
 
     'success with GET' : function(test) {
-        var c = SemantriaClient.create();
+        var c = SemantriaClient.create('','');
 
         var address = 'https://api30.semantria.com';
         var endPoint = '/test.json';
 
         c.sign = function(method, endpoint){
-            test.ok(true)
+            test.ok(true);
             return {query: endpoint, headers : {}}
         };
 
-        var n = nock(address)
-            .get(endPoint)
-            .reply(202, 'hi');
+        nock(address)
+          .get(endPoint)
+          .reply(202, 'hi');
 
         test.expect(2);
 
@@ -255,20 +272,18 @@ exports['execute'] = {
             function(r) {
                 test.equal(r, 'hi');
                 test.done();
-            }, function(err) {
-                test.done();
             }
         ).end();
     },
 
     'will reject on a non 202 or 200 status code' : function(test) {
-        var c = SemantriaClient.create();
+        var c = SemantriaClient.create('','');
 
         var address = 'https://api30.semantria.com';
         var endPoint = '/test.json';
 
         c.sign = function(method, endpoint){
-            test.ok(true)
+            test.ok(true);
             return {query: endpoint, headers : {}}
         };
 
@@ -277,16 +292,16 @@ exports['execute'] = {
             content : "content!"
         };
 
-        var n = nock(address)
-            .post(endPoint, postData)
-            .reply(500, 'internalError');
+        nock(address)
+          .post(endPoint, postData)
+          .reply(500, 'internalError');
 
         test.expect(1);
 
         c.execute('POST', address + endPoint, postData).fail(
-            function(err) {
-                test.done();
-            }
+          function() {
+            test.done();
+          }
         ).end();
     },
 
@@ -294,7 +309,7 @@ exports['execute'] = {
 
         var mockHttps = new EventEmitter();
 
-        MonkeyPatcher.patch(https, 'request', function(opts, cb) {
+        MonkeyPatcher.patch(https, 'request', function() {
             mockHttps.end = function() {
                 test.ok(true);
             };
