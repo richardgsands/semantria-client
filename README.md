@@ -1,4 +1,4 @@
-#semantria-client
+#semantria-client [![Build Status](https://travis-ci.org/brenzenb/semantria-client.png?branch=master)](https://travis-ci.org/brenzenb/semantria-client)
 A small client for interacting with the Semantria API
 
 ## Installation
