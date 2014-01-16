@@ -4,7 +4,7 @@
 
 "use strict";
 
-var AuthRequest = require('../../AuthRequest');
+var AuthRequest = require('../../lib/AuthRequest');
 var crypto = require('crypto');
 var MonkeyPatcher = require('capsela-util').MonkeyPatcher;
 

@@ -4,7 +4,7 @@
 
 "use strict";
 
-var SemantriaClient = require('../../SemantriaClient');
+var SemantriaClient = require('../../lib/SemantriaClient');
 var Q = require('q');
 var fs = require('fs');
 var MonkeyPatcher = require('capsela-util').MonkeyPatcher;
