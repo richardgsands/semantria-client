@@ -1,0 +1,41 @@
+[{
+  "name": "exampleConfig",
+  "language": "English",
+  "document": {
+    "auto_categories_limit": 5,
+    "concept_topics_limit": 5,
+    "query_topics_limit": 5,
+    "detect_language": true,
+    "entity_themes_limit": 0,
+    "named_entities_limit": 5,
+    "phrases_limit": 5,
+    "user_entities_limit": 5,
+    "summary_limit": 3,
+    "themes_limit": 5,
+    "named_relations_limit": 0,
+    "user_relations_limit": 0,
+    "possible_phrases_limit": 0,
+    "theme_mentions_limit": 0,
+    "named_mentions_limit": 0,
+    "user_mentions_limit": 0,
+    "named_opinions_limit": 0,
+    "user_opinions_limit": 0
+  },
+  "collection": {
+    "concept_topics_limit": 5,
+    "query_topics_limit": 5,
+    "named_entities_limit": 5,
+    "theme_mentions_limit": 0,
+    "named_mentions_limit": 0,
+    "facet_atts_limit": 5,
+    "facets_limit": 15,
+    "themes_limit": 5,
+    "facet_mentions_limit": 0,
+    "attribute_mentions_limit": 0
+  },
+  "auto_response": false,
+  "process_html": false,
+  "is_primary": false,
+  "chars_threshold": 30,
+  "one_sentence": false
+}]
