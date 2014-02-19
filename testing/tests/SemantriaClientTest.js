@@ -22,32 +22,6 @@ exports['create'] = {
     }
 };
 
-exports['queueDocument'] = {
-    'success' : function(test) {
-
-        var c = SemantriaClient.create('','');
-
-        c.execute = function(method, endpoint, postData) {
-            test.equal(method, 'POST');
-            test.equal(endpoint, 'https://api30.semantria.com/document.json');
-            test.deepEqual(postData, {
-                text:'sweet content',
-                id : '1234'
-            });
-            return Q.resolve('stuff');
-        };
-
-        test.expect(4);
-
-        c.queueDocument('sweet content', '1234').then(
-            function(result) {
-                test.equal(result, 'stuff');
-                test.done();
-            }
-        );
-    }
-};
-
 exports['retrieveConfigurations'] = {
   'success, matches once' : function (test) {
     var c = SemantriaClient.create('','');
@@ -240,6 +214,54 @@ exports['deleteConfiguration'] = {
   }
 };
 
+exports['queueDocument'] = {
+  'success' : function(test) {
+
+    var c = SemantriaClient.create("","");
+
+    c.execute = function(method, endpoint, postData) {
+      test.equal(method, 'POST');
+      test.equal(endpoint, 'https://api30.semantria.com/document.json');
+      test.deepEqual(postData, {
+        text:'sweet content',
+        id : '1234'
+      });
+      return Q.resolve('stuff');
+    };
+
+    test.expect(4);
+
+    c.queueDocument('sweet content', '1234').then(
+      function(result) {
+        test.equal(result, 'stuff');
+        test.done();
+      }
+    );
+  },
+  'success with configId' : function (test) {
+    var c = SemantriaClient.create('123','abc');
+
+    c.execute = function(method, endpoint, postData) {
+      test.equal(method, 'POST');
+      test.equal(endpoint, 'https://api30.semantria.com/document.json?config_id=mockConfig');
+      test.deepEqual(postData, {
+        text:'sweet content',
+        id : '1234'
+      });
+      return Q.resolve('stuff');
+    };
+
+    test.expect(4);
+
+    c.queueDocument('sweet content', '1234', 'mockConfig').then(
+      function(result) {
+        test.equal(result, 'stuff');
+        test.done();
+      }
+    );
+  }
+};
+
 exports['queueDocumentBatch'] = {
     'success' : function(test) {
 
@@ -264,6 +286,29 @@ exports['queueDocumentBatch'] = {
         );
 
     },
+    'success, specific configId' : function(test) {
+
+      var c = SemantriaClient.create('','');
+
+      c.execute = function(method, endpoint, postData) {
+        test.equal(method, 'POST');
+        test.equal(endpoint, 'https://api30.semantria.com/document/batch.json?config_id=mockConfig');
+        test.deepEqual(postData, contents);
+        return Q.resolve('stuff');
+      };
+
+      test.expect(4);
+
+      var contents = [{id : 123, contents : 'abc'}, {id : 124, contents : 'xyz'}];
+
+      c.queueDocumentBatch(contents, 'mockConfig').then(
+        function(result) {
+          test.equal(result, 'stuff');
+          test.done();
+        }
+      );
+
+    },
 
     'will reject on batch larger than 10' : function(test) {
         var c = SemantriaClient.create('','');
@@ -285,7 +330,7 @@ exports['queueDocumentBatch'] = {
     }
 };
 
-exports['retrieveDocument'] = {
+exports['requestDocument'] = {
 
     'success' : function(test) {
         var c = SemantriaClient.create('','');
@@ -300,12 +345,32 @@ exports['retrieveDocument'] = {
 
         test.expect(3);
 
-        c.retrieveDocument('1234').then(
+        c.requestDocument('1234').then(
             function(result) {
                 test.equal(result, 'stuff');
                 test.done();
             }
         );
+    },
+    'success, specific configId' : function(test) {
+      var c = SemantriaClient.create('','');
+
+      c.execute = function(method, endpoint) {
+
+        test.equal(method, 'GET');
+        test.equal(endpoint, 'https://api30.semantria.com/document/1234.json?config_id=mockConfig');
+
+        return Q.resolve('stuff');
+      };
+
+      test.expect(3);
+
+      c.requestDocument('1234', 'mockConfig').then(
+        function(result) {
+          test.equal(result, 'stuff');
+          test.done();
+        }
+      );
     }
 };
 
