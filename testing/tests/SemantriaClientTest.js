@@ -49,18 +49,140 @@ exports['queueDocument'] = {
 };
 
 exports['retrieveConfigurations'] = {
-  'success' : function (test) {
+  'success, matches once' : function (test) {
     var c = SemantriaClient.create('','');
+    var mockConfigs = [
+      {
+        param: 'not_value'
+      },
+      {
+        param: 'value'
+      }
+    ];
+
     c.execute = function(method, endpoint, postData) {
       test.equal(method, 'GET');
       test.equal(endpoint, 'https://api30.semantria.com/configurations.json');
       test.equal(postData, null);
-      return Q.resolve('retrieve');
+      return Q.resolve(JSON.stringify(mockConfigs));
     };
 
+    c.retrieveConfigurations('param', 'value').then(
+      function (result) {
+        test.deepEqual(result, [mockConfigs[1]]);
+        test.done();
+      }
+    )
+  },
+  'success, matches twice' : function (test) {
+    var c = SemantriaClient.create('','');
+    var mockConfigs = [
+      {
+        param: 'value'
+      },
+      {
+        param: 'value'
+      }
+    ];
+
+    c.execute = function(method, endpoint, postData) {
+      test.equal(method, 'GET');
+      test.equal(endpoint, 'https://api30.semantria.com/configurations.json');
+      test.equal(postData, null);
+      return Q.resolve(JSON.stringify(mockConfigs));
+    };
+
+    c.retrieveConfigurations('param', 'value').then(
+      function (result) {
+        test.deepEqual(result, mockConfigs);
+        test.done();
+      }
+    )
+  },
+  'success, no matches' : function (test) {
+    var c = SemantriaClient.create('','');
+    var mockConfigs = [
+      {
+        param: 'not_value'
+      }
+    ];
+
+    c.execute = function(method, endpoint, postData) {
+      test.equal(method, 'GET');
+      test.equal(endpoint, 'https://api30.semantria.com/configurations.json');
+      test.equal(postData, null);
+      return Q.resolve(JSON.stringify(mockConfigs));
+    };
+
+    c.retrieveConfigurations('param', 'value').then(
+      function (result) {
+        test.deepEqual(result, []);
+        test.done();
+      }
+    )
+  },
+  'failure' : function (test) {
+    var c = SemantriaClient.create('','');
+
+    c.execute = function(method, endpoint, postData) {
+      test.equal(method, 'GET');
+      test.equal(endpoint, 'https://api30.semantria.com/configurations.json');
+      test.equal(postData, null);
+      return Q.reject('Error');
+    };
+
+    c.retrieveConfigurations('param', 'value').fail(
+      function (err) {
+        test.equal(err, 'Error');
+        test.done();
+      }
+    )
+  },
+  'success, no parameters' : function (test) {
+    var c = SemantriaClient.create('','');
+
+    var mockConfigs = [
+      {
+        param: 'not_value'
+      }
+    ];
+
+    c.execute = function(method, endpoint, postData) {
+      test.equal(method, 'GET');
+      test.equal(endpoint, 'https://api30.semantria.com/configurations.json');
+      test.equal(postData, null);
+      return Q.resolve(JSON.stringify(mockConfigs));
+    };
+
+    //When no parameters are passed in, return everything
+    //When a single parameter is passed in, return nothing.
     c.retrieveConfigurations().then(
       function (result) {
-        test.equal(result, 'retrieve');
+        test.deepEqual(result, mockConfigs);
+        test.done();
+      }
+    )
+  },
+  'failure, one parameter only' : function (test) {
+    var c = SemantriaClient.create('','');
+
+    var mockConfigs = [
+      {
+        param: 'not_value'
+      }
+    ];
+
+    c.execute = function(method, endpoint, postData) {
+      test.equal(method, 'GET');
+      test.equal(endpoint, 'https://api30.semantria.com/configurations.json');
+      test.equal(postData, null);
+      return Q.resolve(JSON.stringify(mockConfigs));
+    };
+
+    //When a single parameter is passed in, return an error.
+    c.retrieveConfigurations('single').fail(
+      function (err) {
+        test.equal(err, 'Must include both parameter & value, or neither');
         test.done();
       }
     )
@@ -187,7 +309,7 @@ exports['retrieveDocument'] = {
     }
 };
 
-exports['retrieveDocument'] = {
+exports['retrieveCategories'] = {
 
   'success' : function(test) {
     var c = SemantriaClient.create('','');
