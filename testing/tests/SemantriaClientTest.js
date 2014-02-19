@@ -374,6 +374,48 @@ exports['requestDocument'] = {
     }
 };
 
+exports['retrieveDocumentBatch'] = {
+  'success' : function(test) {
+    var c = SemantriaClient.create('','');
+
+    c.execute = function(method, endpoint) {
+
+      test.equal(method, 'GET');
+      test.equal(endpoint, 'https://api30.semantria.com/document/processed.json');
+
+      return Q.resolve('stuff');
+    };
+
+    test.expect(3);
+
+    c.retrieveDocumentBatch().then(
+      function(result) {
+        test.equal(result, 'stuff');
+        test.done();
+      }
+    );
+  },
+  'success, specific configId' : function(test) {
+    var c = SemantriaClient.create('','');
+
+    c.execute = function(method, endpoint) {
+
+      test.equal(method, 'GET');
+      test.equal(endpoint, 'https://api30.semantria.com/document/processed.json?config_id=mockConfig');
+
+      return Q.resolve('stuff');
+    };
+
+    test.expect(3);
+
+    c.retrieveDocumentBatch('mockConfig').then(
+      function(result) {
+        test.equal(result, 'stuff');
+        test.done();
+      }
+    );
+  }
+};
 exports['retrieveCategories'] = {
 
   'success' : function(test) {

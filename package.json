@@ -1,6 +1,6 @@
 {
   "name": "semantria-client",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A nodejs client for Semantria API tools",
   "main": "lib/SemantriaClient.js",
   "scripts": {
