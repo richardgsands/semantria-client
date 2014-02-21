@@ -424,15 +424,62 @@ exports['retrieveCategories'] = {
     c.execute = function(method, endpoint, postData) {
 
       test.equal(method, 'GET');
-      test.equal(endpoint, 'https://api30.semantria.com/categories.json');
-      test.equal(postData.config_id, 'id');
+      test.equal(endpoint, 'https://api30.semantria.com/categories.json?config_id=id');
+
+      return Q.resolve('stuff');
+    };
+
+    test.expect(3);
+
+    c.retrieveCategories('id').then(
+      function(result) {
+        test.equal(result, 'stuff');
+        test.done();
+      }
+    );
+  }
+};
+exports['updateCategories'] = {
+
+  'success' : function(test) {
+    var c = SemantriaClient.create('','');
+    var mockData = {mock: "data"};
+    c.execute = function(method, endpoint, postData) {
+
+      test.equal(method, 'POST');
+      test.equal(endpoint, 'https://api30.semantria.com/categories.json?config_id=id');
+      test.equal(mockData, postData);
 
       return Q.resolve('stuff');
     };
 
     test.expect(4);
 
-    c.retrieveCategories('id').then(
+    c.updateCategories(mockData,'id').then(
+      function(result) {
+        test.equal(result, 'stuff');
+        test.done();
+      }
+    );
+  }
+};
+exports['deleteCategories'] = {
+
+  'success' : function(test) {
+    var c = SemantriaClient.create('','');
+    var mockData = {mock: "data"};
+    c.execute = function(method, endpoint, postData) {
+
+      test.equal(method, 'DELETE');
+      test.equal(endpoint, 'https://api30.semantria.com/categories.json?config_id=id');
+      test.equal(mockData, postData);
+
+      return Q.resolve('stuff');
+    };
+
+    test.expect(4);
+
+    c.deleteCategories(mockData,'id').then(
       function(result) {
         test.equal(result, 'stuff');
         test.done();
